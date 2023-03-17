@@ -1,3 +1,11 @@
+<!-- You must use at least 2 APIs together in a meaningful way that appropriately leverages or integrates their capabilities. 
+    Don't just access 2 random APIs and display some data from each.
+
+You must use an HTML <table> element as demonstrated as class to display some of your data.
+
+Your page must be interactive -- taking input from the user via at least 3 of the following options: textbox, drop down menu, 
+checkbox, radio button.  You should actually do something with the user's input. -->
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -5,6 +13,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Movies</title>
+    <link rel="stylesheet" href="./style.css"/>
 </head>
 
 <!-- dropdown movie (1)
@@ -12,14 +21,18 @@
     movie streaming services appears from second API
     user can enter if they've watched it or not (2)
     if yes, user can enter rating (3)
+
+    ** have to do something with input
  -->
 
 <body>
 
-    <h1>Movies</h1>
-    <br><br><br>
+    <h1 class="header">Movies</h1>
+    <br>
 
-    <h3>Select a movie from the dropdown</h3>
+    <h3 class="header">Select a movie from the dropdown:</h3>
+    <select id="popMovies" onChange="callMovieInfo()"></select>
+
 
     <script src="script.js" defer></script>
 </body>
