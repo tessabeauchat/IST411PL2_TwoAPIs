@@ -45,3 +45,27 @@ function getPopularMovies(){
 
     request.send();
 }
+
+function showImage(){
+    const searchedMovie = document.querySelector("#searchMovie").value;
+    searchableMovie = searchedMovie.replace(/ /g, "+");
+
+    const request = new XMLHttpRequest;
+    request.open("GET","https://api.themoviedb.org/3/search/movie?api_key=ea21b9adbbf424fd68259ea26cdb0591&query=" + searchableMovie, true);
+
+    request.onload = function() {
+        data = JSON.parse(this.response);
+        if(request.status == 200){
+            console.log('working') //working!!
+            // source = 'https://api.themoviedb.org/3/search/movie?api_key=ea21b9adbbf424fd68259ea26cdb0591&query=' + searchableMovie + data.poster_path
+            // image = document.createElement("img");
+            // image.src = source;
+            // document.querySelector("#poster").append(image);
+        }
+        else{
+            console.log(`Error occurred. Status: ${request.status}`)
+        }
+    }
+
+    request.send();
+}
