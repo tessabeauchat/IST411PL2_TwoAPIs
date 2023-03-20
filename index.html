@@ -1,9 +1,4 @@
-<!-- You must use at least 2 APIs together in a meaningful way that appropriately leverages or integrates their capabilities. 
-    Don't just access 2 random APIs and display some data from each.
-
-Your page must be interactive -- taking input from the user via at least 3 of the following options: textbox, drop down menu, 
-checkbox, radio button.  You should actually do something with the user's input. -->
-
+<!-- Tessa Beauchat and Rachel McAdams -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -19,6 +14,7 @@ checkbox, radio button.  You should actually do something with the user's input.
     <h1 class="header">Movies</h1>
     <br>
 
+    <!-- List popular movies -->
     <h2 class="header">Popular Movies</h2>
     <table id="movieTable" style="border:solid; background-color: bisque;">
         <tr>
@@ -32,22 +28,21 @@ checkbox, radio button.  You should actually do something with the user's input.
     <br><br>
 
     <h2 class="header">Search for a Movie</h2>
-    <!-- search for a movie -->
-    <!-- take in user input, delimit it, append it to URL, make spaces %20 -->
-    <!-- https://api.themoviedb.org/3/search/movie?api_key=ea21b9adbbf424fd68259ea26cdb0591&query=Jack+Reacher -->
-    <!-- Tessa -->
-    <input type="search" id="titleToSearch"placeholder="Enter a Movie Name">
-    <button id="searchMovieBtn" onclick="searchMovie();">Search</button>
 
+    <!-- Search for a movie -->
+    <input type="search" id="titleToSearch"placeholder="Enter a Movie Name">
+    <button id="searchMovieBtn" onclick="searchMovie(); clearRadios();">Search</button>
+
+    <!-- Show poster -->
     <input type="checkbox" onclick="showImage();">Show Poster</input>
     <img id="poster">
 
-    <input type="checkbox" onclick="loadSimilarTitles();">Did you like this movie?</input>
-    <!-- Rachel -->
-
-
-    <!-- if they click they like the movie, it will display similar titles -- calls second API -->
-    <!-- Tessa -->
+    <!-- Whether or not they like the movie -->
+    <p>Did you like this movie?</p> 
+    <input type="radio" id="yes" name="likeability" onclick="loadSimilarTitles();">Yes</input> 
+    <input type="radio" id="no" name="likeability" onclick="didNotLike();">No</input>
+    <p id="movieLikability"></p>
+    <br>
 
     <script src="script.js" defer></script>
 </body>
