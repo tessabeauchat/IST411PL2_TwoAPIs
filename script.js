@@ -58,18 +58,7 @@ function searchMovie(){
     console.log(URLQuery)
     const requestMovieInfo = new XMLHttpRequest;
     requestMovieInfo.open("GET", URLQuery, true);
-   /*  URLQuery = "https://moviesminidatabase.p.rapidapi.com/movie/imdb_id/byTitle/" + searchableMovie 
-    const requestMovieInfo = new XMLHttpRequest;
-    requestMovieInfo.withCredentials = true;
-    requestMovieInfo.addEventListener("readystatechange", function () {
-        if (this.readyState === this.DONE) {
-            console.log(this.responseText);
-        }
-    });
-    requestMovieInfo.open("GET", URLQuery, true);
-    requestMovieInfo.setRequestHeader("X-RapidAPI-Key", "b6b4afebbfmsh76417d03defb3e7p185101jsn31487b9b83c2");
-    requestMovieInfo.setRequestHeader("X-RapidAPI-Host", "moviesminidatabase.p.rapidapi.com"); 
- */
+
     requestMovieInfo.onload = function() {
         data = JSON.parse(this.response);
         if(requestMovieInfo.status == 200){
@@ -114,9 +103,9 @@ function showImage(){
 
 //Load similar titles by using ID retrieved from API Two and inputting it into API One
 function loadSimilarTitles(){
-    document.querySelector("#movieLikability").innerHTML = "";
+    document.querySelector("#movieLikeability").innerHTML = "";
     var TMDBID;
-    //call returned IMDB ID from searchMovie()
+    // call returned IMDB ID from searchMovie()
     const requestFindByIMDBID = new XMLHttpRequest;
     var secondAPIURL = "https://api.themoviedb.org/3/find/" + IMDBID + "?api_key=ea21b9adbbf424fd68259ea26cdb0591&language=en-US&external_source=imdb_id";
     console.log(secondAPIURL);
@@ -148,10 +137,17 @@ function loadSimilarTitles(){
         data = JSON.parse(this.response);
         if(requestFindSimilarByID.status == 200){
             console.log('similar titles query complete')
+            let titleElt = document.createElement("h3");
+            let titleTextNode = document.createTextNode("You may like these as well:");
+            titleElt.appendChild(titleTextNode);
+            document.querySelector("#movieLikeability").appendChild(titleElt);
             data.results.forEach(
                 film =>
                 {
-                    console.log(film.original_title);
+                    let movieName = document.createElement("p");
+                    let movieTextNode = document.createTextNode(film.original_title);
+                    movieName.appendChild(movieTextNode);
+                    document.querySelector("#movieLikeability").appendChild(movieName);
                 }
             )
         }
@@ -164,12 +160,12 @@ function loadSimilarTitles(){
 
 // Message for when user did not like movie
 function didNotLike(){ 
-    document.querySelector("#movieLikability").innerHTML = "I'm sorry you didn't like it!" 
+    document.querySelector("#movieLikeability").innerHTML = "I'm sorry you didn't like it!" 
 }
 
 // Clear radio buttons/associated output when submit new movie
 function clearRadios(){
     document.querySelector('#no').checked = false;
     document.querySelector('#yes').checked = false;
-    document.querySelector("#movieLikability").innerHTML = "";
+    document.querySelector("#movieLikeability").innerHTML = "";
 }
