@@ -47,12 +47,14 @@ function getPopularMovies(){
 }
 function searchMovie(){
     const searchedMovie = document.querySelector("#titleToSearch").value;
+    var IMDBID;
     searchableMovie = searchedMovie.replace(/\s/g, '%20');
-    var IMDBID
 
     URLQuery = "https://moviesminidatabase.p.rapidapi.com/movie/imdb_id/byTitle/" + searchableMovie + "/?rapidapi-key=b6b4afebbfmsh76417d03defb3e7p185101jsn31487b9b83c2"
-    //console.log(URLQueryTest)
-    //URLQuery = "https://moviesminidatabase.p.rapidapi.com/movie/imdb_id/byTitle/" + searchableMovie 
+    console.log(URLQuery)
+    const requestMovieInfo = new XMLHttpRequest;
+    requestMovieInfo.open("GET", URLQuery, true);
+   /*  URLQuery = "https://moviesminidatabase.p.rapidapi.com/movie/imdb_id/byTitle/" + searchableMovie 
     const requestMovieInfo = new XMLHttpRequest;
     requestMovieInfo.withCredentials = true;
     requestMovieInfo.addEventListener("readystatechange", function () {
@@ -63,12 +65,12 @@ function searchMovie(){
     requestMovieInfo.open("GET", URLQuery, true);
     requestMovieInfo.setRequestHeader("X-RapidAPI-Key", "b6b4afebbfmsh76417d03defb3e7p185101jsn31487b9b83c2");
     requestMovieInfo.setRequestHeader("X-RapidAPI-Host", "moviesminidatabase.p.rapidapi.com"); 
-
-    requestMovieInfo.onreadystatechange = function() {
+ */
+    requestMovieInfo.onload = function() {
         data = JSON.parse(this.response);
         if(requestMovieInfo.status == 200){
             console.log('found movie')//working!!
-            IMDBID = data.imdb_id
+            IMDBID = data.results.imdb_id
             console.log(IMDBID)
         }
         else{

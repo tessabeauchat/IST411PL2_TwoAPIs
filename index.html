@@ -36,10 +36,8 @@ checkbox, radio button.  You should actually do something with the user's input.
     <!-- take in user input, delimit it, append it to URL, make spaces %20 -->
     <!-- https://api.themoviedb.org/3/search/movie?api_key=ea21b9adbbf424fd68259ea26cdb0591&query=Jack+Reacher -->
     <!-- Tessa -->
-    <form id="searchMovie"> 
-        <input type="search" id="titleToSearch"placeholder="Enter a Movie Name">
-        <button id="searchMovieBtn" onclick="searchMovie();">Search</button>
-    </form>
+    <input type="search" id="titleToSearch"placeholder="Enter a Movie Name">
+    <button id="searchMovieBtn" onclick="searchMovie();">Search</button>
 
     <input type="checkbox" onclick="showImage();">Show Poster</input>
     <img id="poster">
