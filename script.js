@@ -45,7 +45,61 @@ function getPopularMovies(){
 
     request.send();
 }
+function searchMovie(){
+    const searchedMovie = document.querySelector("#titleToSearch").value;
+    searchableMovie = searchedMovie.replace(/\s/g, '%20');
+    var IMDBID
 
+    URLQuery = "https://moviesminidatabase.p.rapidapi.com/movie/imdb_id/byTitle/" + searchableMovie + "/?rapidapi-key=b6b4afebbfmsh76417d03defb3e7p185101jsn31487b9b83c2"
+    //console.log(URLQueryTest)
+    //URLQuery = "https://moviesminidatabase.p.rapidapi.com/movie/imdb_id/byTitle/" + searchableMovie 
+    const requestMovieInfo = new XMLHttpRequest;
+    requestMovieInfo.withCredentials = true;
+    requestMovieInfo.addEventListener("readystatechange", function () {
+        if (this.readyState === this.DONE) {
+            console.log(this.responseText);
+        }
+    });
+    requestMovieInfo.open("GET", URLQuery, true);
+    requestMovieInfo.setRequestHeader("X-RapidAPI-Key", "b6b4afebbfmsh76417d03defb3e7p185101jsn31487b9b83c2");
+    requestMovieInfo.setRequestHeader("X-RapidAPI-Host", "moviesminidatabase.p.rapidapi.com"); 
+
+    requestMovieInfo.onreadystatechange = function() {
+        data = JSON.parse(this.response);
+        if(requestMovieInfo.status == 200){
+            console.log('found movie')//working!!
+            IMDBID = data.imdb_id
+            console.log(IMDBID)
+        }
+        else{
+            console.log(`Error occurred. Status: ${requestMovieInfo.status}`)
+        }
+
+    } 
+
+    requestMovieInfo.send();
+    return IMDBID;
+
+    
+    /* URLQuery = "https://api.themoviedb.org/3/search/movie?api_key=ea21b9adbbf424fd68259ea26cdb0591&query=" + searchableMovie
+    console.log(URLQuery)
+
+    document.getElementById("searchMovieBtn").addEventListener("click", function(){ alert("Hello World!"); });
+
+    const requestMovieInfo = new XMLHttpRequest;
+    requestMovieInfo.open("GET", URLQuery, true);
+
+    requestMovieInfo.onreadystatechange = function() {
+        data = JSON.parse(this.response);
+        if(requestMovieInfo.status == 200){
+            console.log('found movie')//working!!
+            /* movieID = data.id
+            console.log(movieID); */
+            // source = 'https://api.themoviedb.org/3/search/movie?api_key=ea21b9adbbf424fd68259ea26cdb0591&query=' + searchableMovie + data.poster_path
+            // image = document.createElement("img");
+            // image.src = source;
+            // document.querySelector("#poster").append(image);
+}
 function showImage(){
     const searchedMovie = document.querySelector("#searchMovie").value;
     searchableMovie = searchedMovie.replace(/ /g, "+");
@@ -68,4 +122,34 @@ function showImage(){
     }
 
     request.send();
+} 
+function loadSimilarTitles(){
+    //call returned IMDB ID from searchMovie()
+    const requestFindByIMDBID = new XMLHttpRequest;
+    var IMDBID = searchMovie();
+    var TMDBID; 
+    requestFindByIMDBID.open("GET","https://api.themoviedb.org/3/find/" + IMDBID + "?api_key=ea21b9adbbf424fd68259ea26cdb0591&language=en-US&external_source=imdb_id", true);
+    requestFindByIMDBID.onload = function() {
+        data = JSON.parse(this.response);
+        if(request.status == 200){
+            TMDBID = data.id;
+        }
+        else{
+            console.log(`Error occurred. Status: ${requestFindByIMDBID.status}`)
+        }
+    }
+    requestFindByIMDBID.send();
+    //use ID to search similar titles 
+    const requestFindSimilarByID = new XMLHttpRequest;
+    requestFindSimilarByID.open("GET","https://api.themoviedb.org/3/movie/" + TMDBID + "/similar?api_key=ea21b9adbbf424fd68259ea26cdb0591&language=en-US&page=1", true);
+    requestFindSimilarByID = function() {
+        data = JSON.parse(this.response);
+        if(request.status == 200){
+            //print similar titles to page
+        }
+        else{
+            console.log(`Error occurred. Status: ${requestFindSimilarByID.status}`)
+        }
+    }
+    requestFindSimilarByID.send();
 }
