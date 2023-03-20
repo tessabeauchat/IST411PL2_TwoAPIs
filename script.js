@@ -1,5 +1,7 @@
 let data;
 getPopularMovies();
+var IMDBID;
+//var TMDBID;
 
 // Get list of popular movies from API One
 function getPopularMovies(){
@@ -50,7 +52,6 @@ function getPopularMovies(){
 //Search for movie in API Two
 function searchMovie(){
     const searchedMovie = document.querySelector("#titleToSearch").value;
-    var IMDBID;
     searchableMovie = searchedMovie.replace(/\s/g, '%20');
 
     URLQuery = "https://moviesminidatabase.p.rapidapi.com/movie/imdb_id/byTitle/" + searchableMovie + "/?rapidapi-key=b6b4afebbfmsh76417d03defb3e7p185101jsn31487b9b83c2"
@@ -72,9 +73,9 @@ function searchMovie(){
     requestMovieInfo.onload = function() {
         data = JSON.parse(this.response);
         if(requestMovieInfo.status == 200){
-            console.log('found movie')//working!!
-            IMDBID = data.results.imdb_id
-            console.log(IMDBID)
+            console.log('found movie')
+            IMDBID = data.results[0].imdb_id
+            console.log(IMDBID)      
         }
         else{
             console.log(`Error occurred. Status: ${requestMovieInfo.status}`)
@@ -84,26 +85,6 @@ function searchMovie(){
 
     requestMovieInfo.send();
     return IMDBID;
-
-    
-    /* URLQuery = "https://api.themoviedb.org/3/search/movie?api_key=ea21b9adbbf424fd68259ea26cdb0591&query=" + searchableMovie
-    console.log(URLQuery)
-
-    document.getElementById("searchMovieBtn").addEventListener("click", function(){ alert("Hello World!"); });
-
-    const requestMovieInfo = new XMLHttpRequest;
-    requestMovieInfo.open("GET", URLQuery, true);
-
-    requestMovieInfo.onreadystatechange = function() {
-        data = JSON.parse(this.response);
-        if(requestMovieInfo.status == 200){
-            console.log('found movie')//working!!
-            /* movieID = data.id
-            console.log(movieID); */
-            // source = 'https://api.themoviedb.org/3/search/movie?api_key=ea21b9adbbf424fd68259ea26cdb0591&query=' + searchableMovie + data.poster_path
-            // image = document.createElement("img");
-            // image.src = source;
-            // document.querySelector("#poster").append(image);
 }
 
 //Show image from API One
@@ -134,34 +115,51 @@ function showImage(){
 //Load similar titles by using ID retrieved from API Two and inputting it into API One
 function loadSimilarTitles(){
     document.querySelector("#movieLikability").innerHTML = "";
+    var TMDBID;
     //call returned IMDB ID from searchMovie()
     const requestFindByIMDBID = new XMLHttpRequest;
-    var IMDBID = searchMovie();
-    var TMDBID; 
-    requestFindByIMDBID.open("GET","https://api.themoviedb.org/3/find/" + IMDBID + "?api_key=ea21b9adbbf424fd68259ea26cdb0591&language=en-US&external_source=imdb_id", true);
+    var secondAPIURL = "https://api.themoviedb.org/3/find/" + IMDBID + "?api_key=ea21b9adbbf424fd68259ea26cdb0591&language=en-US&external_source=imdb_id";
+    console.log(secondAPIURL);
+    requestFindByIMDBID.open("GET", secondAPIURL, true);
     requestFindByIMDBID.onload = function() {
         data = JSON.parse(this.response);
-        if(request.status == 200){
-            TMDBID = data.id;
+        if(requestFindByIMDBID.status == 200){
+            console.log('connected to second API')
+            TMDBID = data.movie_results[0].id;
+            console.log(TMDBID)
         }
         else{
             console.log(`Error occurred. Status: ${requestFindByIMDBID.status}`)
         }
+    TMDBIDString = TMDBID.toString()
+    //console.log(TMDBIDString)
+    return(TMDBIDString);
     }
     requestFindByIMDBID.send();
+
     //use ID to search similar titles 
+    console.log(TMDBIDString)
+    var similarTitlesURL = "https://api.themoviedb.org/3/movie/" + TMDBIDString + "/similar?api_key=ea21b9adbbf424fd68259ea26cdb0591&language=en-US&page=1"
+    console.log(similarTitlesURL)
+
     const requestFindSimilarByID = new XMLHttpRequest;
-    requestFindSimilarByID.open("GET","https://api.themoviedb.org/3/movie/" + TMDBID + "/similar?api_key=ea21b9adbbf424fd68259ea26cdb0591&language=en-US&page=1", true);
-    requestFindSimilarByID = function() {
+    requestFindSimilarByID.open("GET", similarTitlesURL, true);
+    requestFindSimilarByID.onload = function() {
         data = JSON.parse(this.response);
-        if(request.status == 200){
-            //print similar titles to page
+        if(requestFindSimilarByID.status == 200){
+            console.log('similar titles query complete')
+            data.results.forEach(
+                film =>
+                {
+                    console.log(film.original_title);
+                }
+            )
         }
         else{
             console.log(`Error occurred. Status: ${requestFindSimilarByID.status}`)
         }
     }
-    requestFindSimilarByID.send();
+    requestFindSimilarByID.send(); 
 }
 
 // Message for when user did not like movie
