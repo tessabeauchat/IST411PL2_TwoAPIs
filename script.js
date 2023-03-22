@@ -78,7 +78,9 @@ function searchMovie(){
 
 //Show image from API One
 function showImage(){
-    const searchedMovie = document.querySelector("#searchMovie").value;
+    document.querySelector("#poster").innerHTML = "";
+
+    const searchedMovie = document.querySelector("#titleToSearch").value;
     searchableMovie = searchedMovie.replace(/ /g, "+");
 
     const request = new XMLHttpRequest;
@@ -87,11 +89,10 @@ function showImage(){
     request.onload = function() {
         data = JSON.parse(this.response);
         if(request.status == 200){
-            console.log('working') //working!!
-            // source = 'https://api.themoviedb.org/3/search/movie?api_key=ea21b9adbbf424fd68259ea26cdb0591&query=' + searchableMovie + data.poster_path
-            // image = document.createElement("img");
-            // image.src = source;
-            // document.querySelector("#poster").append(image);
+            var img = document.createElement("img");
+            img.src = 'https://themoviedb.org/t/p/w300_and_h450_bestv2' + data.results[0].poster_path;
+            var src = document.getElementById("poster");
+            src.appendChild(img);
         }
         else{
             console.log(`Error occurred. Status: ${request.status}`)
