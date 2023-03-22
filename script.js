@@ -1,4 +1,8 @@
 let data;
+let IMDBIDConnection;
+let TMDBIDConnection;
+let TMDBSimilarTitlesConnection;
+let TMDBIDString;
 getPopularMovies();
 var IMDBID;
 //var TMDBID;
@@ -60,10 +64,10 @@ function searchMovie(){
     requestMovieInfo.open("GET", URLQuery, true);
 
     requestMovieInfo.onload = function() {
-        data = JSON.parse(this.response);
+        IMDBIDConnection = JSON.parse(this.response);
         if(requestMovieInfo.status == 200){
             console.log('found movie')
-            IMDBID = data.results[0].imdb_id
+            IMDBID = IMDBIDConnection.results[0].imdb_id
             console.log(IMDBID)      
         }
         else{
@@ -112,51 +116,49 @@ function loadSimilarTitles(){
     console.log(secondAPIURL);
     requestFindByIMDBID.open("GET", secondAPIURL, true);
     requestFindByIMDBID.onload = function() {
-        data = JSON.parse(this.response);
+        TMDBIDConnection = JSON.parse(this.response);
         if(requestFindByIMDBID.status == 200){
             console.log('connected to second API')
-            TMDBID = data.movie_results[0].id;
+            TMDBID = TMDBIDConnection.movie_results[0].id;
             console.log(TMDBID)
+            TMDBIDString = TMDBID.toString()
+            console.log(TMDBIDString)
+                var similarTitlesURL = "https://api.themoviedb.org/3/movie/" + TMDBIDString + "/similar?api_key=ea21b9adbbf424fd68259ea26cdb0591&language=en-US&page=1"
+                console.log(similarTitlesURL)
+
+                const requestFindSimilarByID = new XMLHttpRequest;
+                requestFindSimilarByID.open("GET", similarTitlesURL, true);
+                requestFindSimilarByID.onload = function() {
+                    TMDBSimilarTitlesConnection = JSON.parse(this.response);
+                    if(requestFindSimilarByID.status == 200){
+                        console.log('similar titles query complete')
+                        let titleElt = document.createElement("h3");
+                        let titleTextNode = document.createTextNode("You may like these as well:");
+                        titleElt.appendChild(titleTextNode);
+                        document.querySelector("#movieLikeability").appendChild(titleElt);
+                        TMDBSimilarTitlesConnection.results.forEach(
+                            film =>
+                            {
+                                let movieName = document.createElement("p");
+                                let movieTextNode = document.createTextNode(film.original_title);
+                                movieName.appendChild(movieTextNode);
+                                document.querySelector("#movieLikeability").appendChild(movieName);
+                            }
+                        )
+                    }
+                    else{
+                        console.log(`Error occurred. Status: ${requestFindSimilarByID.status}`)
+                    }
+                }
+                requestFindSimilarByID.send(); 
         }
         else{
             console.log(`Error occurred. Status: ${requestFindByIMDBID.status}`)
         }
-    TMDBIDString = TMDBID.toString()
     //console.log(TMDBIDString)
     return(TMDBIDString);
     }
     requestFindByIMDBID.send();
-
-    //use ID to search similar titles 
-    console.log(TMDBIDString)
-    var similarTitlesURL = "https://api.themoviedb.org/3/movie/" + TMDBIDString + "/similar?api_key=ea21b9adbbf424fd68259ea26cdb0591&language=en-US&page=1"
-    console.log(similarTitlesURL)
-
-    const requestFindSimilarByID = new XMLHttpRequest;
-    requestFindSimilarByID.open("GET", similarTitlesURL, true);
-    requestFindSimilarByID.onload = function() {
-        data = JSON.parse(this.response);
-        if(requestFindSimilarByID.status == 200){
-            console.log('similar titles query complete')
-            let titleElt = document.createElement("h3");
-            let titleTextNode = document.createTextNode("You may like these as well:");
-            titleElt.appendChild(titleTextNode);
-            document.querySelector("#movieLikeability").appendChild(titleElt);
-            data.results.forEach(
-                film =>
-                {
-                    let movieName = document.createElement("p");
-                    let movieTextNode = document.createTextNode(film.original_title);
-                    movieName.appendChild(movieTextNode);
-                    document.querySelector("#movieLikeability").appendChild(movieName);
-                }
-            )
-        }
-        else{
-            console.log(`Error occurred. Status: ${requestFindSimilarByID.status}`)
-        }
-    }
-    requestFindSimilarByID.send(); 
 }
 
 // Message for when user did not like movie
