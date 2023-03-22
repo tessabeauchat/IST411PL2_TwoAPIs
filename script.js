@@ -4,7 +4,7 @@ let TMDBIDConnection;
 let TMDBSimilarTitlesConnection;
 let TMDBIDString;
 getPopularMovies();
-var IMDBID;
+let IMDBID;
 //var TMDBID;
 
 // Get list of popular movies from API One
@@ -60,23 +60,55 @@ function searchMovie(){
 
     URLQuery = "https://moviesminidatabase.p.rapidapi.com/movie/imdb_id/byTitle/" + searchableMovie + "/?rapidapi-key=b6b4afebbfmsh76417d03defb3e7p185101jsn31487b9b83c2"
     console.log(URLQuery)
-    const requestMovieInfo = new XMLHttpRequest;
-    requestMovieInfo.open("GET", URLQuery, true);
-
-    requestMovieInfo.onload = function() {
+    const requestIMDBID = new XMLHttpRequest;
+    requestIMDBID.open("GET", URLQuery, true);
+    requestIMDBID.onload = function() {
         IMDBIDConnection = JSON.parse(this.response);
-        if(requestMovieInfo.status == 200){
+        if(requestIMDBID.status == 200){
             console.log('found movie')
             IMDBID = IMDBIDConnection.results[0].imdb_id
-            console.log(IMDBID)      
+            console.log(IMDBID)
+
+            URLQuery2 = "https://moviesminidatabase.p.rapidapi.com/movie/id/" + IMDBID + "/?rapidapi-key=b6b4afebbfmsh76417d03defb3e7p185101jsn31487b9b83c2"
+            console.log(URLQuery2)
+            const requestMovieInfo = new XMLHttpRequest;
+            requestMovieInfo.open("GET", URLQuery2, true);
+            requestMovieInfo.onload = function() {
+                IMDBIDConnection = JSON.parse(this.response);
+                if(requestMovieInfo.status == 200){
+                    console.log('getting movie info')
+                    //var title = document.createTextNode('Title: ' + IMDBIDConnection.results.title + '\n')
+                    //console.log(title)
+                    var year = document.createTextNode('Year Released: ' + IMDBIDConnection.results.year + '\n')
+                    console.log(year)
+                    var contentRating = document.createTextNode('Conent Rating:' + IMDBIDConnection.results.content_rating + '\n')
+                    console.log(contentRating)
+                    var rating = document.createTextNode('Average Rating: ' + IMDBIDConnection.results.rating + '\n')
+                    console.log(rating)
+                    var description = document.createTextNode('Description: ' + IMDBIDConnection.results.description + '\n')
+                    console.log(description)
+
+                    var srcMovieInfo = document.getElementById("movieInfo");
+                    //srcMovieInfo.appendChild(title);  
+                    srcMovieInfo.appendChild(year);  
+                    srcMovieInfo.appendChild(contentRating);  
+                    srcMovieInfo.appendChild(rating);  
+                    srcMovieInfo.appendChild(description);  
         }
         else{
             console.log(`Error occurred. Status: ${requestMovieInfo.status}`)
         }
+    } 
+    requestMovieInfo.send();
+            
+        }
+        else{
+            console.log(`Error occurred. Status: ${requestIMDBID.status}`)
+        }
 
     } 
 
-    requestMovieInfo.send();
+    requestIMDBID.send();
     return IMDBID;
 }
 
@@ -172,5 +204,6 @@ function clearInputs(){
     document.querySelector('#yes').checked = false;
     document.querySelector("#movieLikeability").innerHTML = "";
     document.querySelector("#poster").innerHTML = "";
+    document.querySelector('#movieInfo').innerHTML = "";
 
 }
