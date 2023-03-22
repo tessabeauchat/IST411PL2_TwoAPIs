@@ -74,10 +74,10 @@ function searchMovie(){
             requestMovieInfo.onload = function() {
                 IMDBIDConnection = JSON.parse(this.response);
                 if(requestMovieInfo.status == 200){
-                    var year = document.createTextNode('Year Released: ' + IMDBIDConnection.results.year + '\n')
-                    var contentRating = document.createTextNode('Content Rating: ' + IMDBIDConnection.results.content_rating + '\n')
-                    var rating = document.createTextNode('Average Rating: ' + IMDBIDConnection.results.rating + '\n')
-                    var description = document.createTextNode('Description: ' + IMDBIDConnection.results.description + '\n')
+                    var year = document.createTextNode('Year Released: ' + IMDBIDConnection.results.year)
+                    var contentRating = document.createTextNode('Content Rating: ' + IMDBIDConnection.results.content_rating)
+                    var rating = document.createTextNode('Average Rating: ' + IMDBIDConnection.results.rating)
+                    var description = document.createTextNode('Description: ' + IMDBIDConnection.results.description)
 
                     var srcMovieInfo = document.getElementById("movieInfo");
                     srcMovieInfo.appendChild(year);  
