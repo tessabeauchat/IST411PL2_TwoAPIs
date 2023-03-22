@@ -167,8 +167,10 @@ function didNotLike(){
 }
 
 // Clear radio buttons/associated output when submit new movie
-function clearRadios(){
+function clearInputs(){
     document.querySelector('#no').checked = false;
     document.querySelector('#yes').checked = false;
     document.querySelector("#movieLikeability").innerHTML = "";
+    document.querySelector("#poster").innerHTML = "";
+
 }
