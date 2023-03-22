@@ -1,11 +1,9 @@
 let data;
 let IMDBIDConnection;
-let TMDBIDConnection;
 let TMDBSimilarTitlesConnection;
 let TMDBIDString;
 getPopularMovies();
 let IMDBID;
-//var TMDBID;
 
 // Get list of popular movies from API One
 function getPopularMovies(){
@@ -76,28 +74,23 @@ function searchMovie(){
             requestMovieInfo.onload = function() {
                 IMDBIDConnection = JSON.parse(this.response);
                 if(requestMovieInfo.status == 200){
-                    console.log('getting movie info')
-                    //var title = document.createTextNode('Title: ' + IMDBIDConnection.results.title + '\n')
-                    //console.log(title)
                     var year = document.createTextNode('Year Released: ' + IMDBIDConnection.results.year + '\n')
-                    console.log(year)
-                    var contentRating = document.createTextNode('Conent Rating:' + IMDBIDConnection.results.content_rating + '\n')
-                    console.log(contentRating)
+                    var contentRating = document.createTextNode('Content Rating: ' + IMDBIDConnection.results.content_rating + '\n')
                     var rating = document.createTextNode('Average Rating: ' + IMDBIDConnection.results.rating + '\n')
-                    console.log(rating)
                     var description = document.createTextNode('Description: ' + IMDBIDConnection.results.description + '\n')
-                    console.log(description)
 
                     var srcMovieInfo = document.getElementById("movieInfo");
-                    //srcMovieInfo.appendChild(title);  
                     srcMovieInfo.appendChild(year);  
-                    srcMovieInfo.appendChild(contentRating);  
+                    srcMovieInfo.appendChild(document.createElement("br"));
+                    srcMovieInfo.appendChild(contentRating); 
+                    srcMovieInfo.appendChild(document.createElement("br")); 
                     srcMovieInfo.appendChild(rating);  
+                    srcMovieInfo.appendChild(document.createElement("br"));
                     srcMovieInfo.appendChild(description);  
-        }
-        else{
-            console.log(`Error occurred. Status: ${requestMovieInfo.status}`)
-        }
+                }
+                else{
+                    console.log(`Error occurred. Status: ${requestMovieInfo.status}`)
+                }
     } 
     requestMovieInfo.send();
             
@@ -116,6 +109,9 @@ function searchMovie(){
 function showImage(){
     document.querySelector("#poster").innerHTML = "";
 
+    var isChecked = document.getElementById('imgChk');
+    
+    if(isChecked.checked){
     const searchedMovie = document.querySelector("#titleToSearch").value;
     searchableMovie = searchedMovie.replace(/ /g, "+");
 
@@ -136,6 +132,11 @@ function showImage(){
     }
 
     request.send();
+    }
+    else {
+        document.querySelector("#poster").innerHTML = "";
+    }
+
 } 
 
 //Load similar titles by using ID retrieved from API Two and inputting it into API One
@@ -187,7 +188,6 @@ function loadSimilarTitles(){
         else{
             console.log(`Error occurred. Status: ${requestFindByIMDBID.status}`)
         }
-    //console.log(TMDBIDString)
     return(TMDBIDString);
     }
     requestFindByIMDBID.send();
@@ -203,6 +203,7 @@ function clearInputs(){
     document.querySelector('#no').checked = false;
     document.querySelector('#yes').checked = false;
     document.querySelector("#movieLikeability").innerHTML = "";
+    document.querySelector('#imgChk').checked = false;
     document.querySelector("#poster").innerHTML = "";
     document.querySelector('#movieInfo').innerHTML = "";
 
